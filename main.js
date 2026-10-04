@@ -17,13 +17,13 @@ if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion
 const appear = new IntersectionObserver(entries => entries.forEach(en => {
   if (en.isIntersecting) { en.target.classList.add('in'); appear.unobserve(en.target); }
 }), { threshold: 0.5 });
-document.querySelectorAll('.appear').forEach(el => appear.observe(el));
+document.querySelectorAll('.appear, .slide-x').forEach(el => appear.observe(el));
 
-// Scroll reveal for cards and footer contact info
+// Scroll reveal for project cards
 const io = new IntersectionObserver(entries => entries.forEach(en => {
   if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
 }), { threshold: 0.15 });
-document.querySelectorAll('.reveal, .slide-in').forEach((el, i) => {
+document.querySelectorAll('.reveal').forEach((el, i) => {
   if (el.classList.contains('reveal')) el.style.transitionDelay = `${(i % 2) * 0.12}s`;
   io.observe(el);
 });
