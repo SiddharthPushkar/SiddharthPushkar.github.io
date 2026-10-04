@@ -32,35 +32,86 @@ button{font:inherit;border:0;background:none;color:inherit}
 .nav{display:flex;gap:6px;background:#fff;border-radius:999px;padding:10px 26px;box-shadow:0 2px 14px rgba(0,0,0,.08)}
 .nav a{font-weight:500;font-size:16px;line-height:22px;color:#27272a;margin:0 14px}
 
-/* HERO */
-.hero{position:relative;min-height:100vh;display:grid;place-items:center;background-color:var(--bg);overflow:hidden;
-  background-image:radial-gradient(#cfcfcf 1px,transparent 1px);background-size:22px 22px}
-.hero-inner{position:relative;width:min(560px,90vw);text-align:center;padding:60px 0}
-.pill{display:inline-block;font:500 15px/21px Inter,sans-serif;background:#fff;padding:6px 14px;border-radius:999px;box-shadow:0 1px 4px rgba(0,0,0,.08);color:#111011}
-.hero h1{font-weight:600;font-size:clamp(30px,4vw,40px);line-height:1.2;margin:18px auto 0;max-width:15ch;color:#000}
-.avatar{position:absolute;right:-40px;top:122px;width:151px;height:auto}
-.keys{position:absolute;left:-10px;top:30px;width:90px;height:auto}
-.note{position:absolute;left:-150px;top:265px;text-align:left;font:400 16px/31px 'Architects Daughter',cursive;letter-spacing:.5px;color:var(--ink)}
-.squiggle{position:absolute;left:180px;top:30px;fill:#000;overflow:visible}
-.toolbar{display:inline-flex;align-items:center;gap:6px;background:#1e1e1e;border-radius:10px;padding:5px 8px;margin-top:40px;position:relative;left:60px;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-.tool{width:29px;height:29px;display:grid;place-items:center;border-radius:5px;transition:transform .35s var(--spring),background-color .2s}
-.tool svg{width:24px;height:24px;display:block}
-.tool.active{background:#f05829}
-.tool:hover{transform:scale(1.3)}
-.tool:not(.active):hover{background:#3a3a3a}
-.down{position:absolute;bottom:24px;left:50%;translate:-50% 0;display:grid;place-items:center;width:36px;height:36px;border-radius:8px;background:#f5f5f5;transition:background .2s, transform .3s var(--spring)}
-.down svg{animation:bob 1.8s ease-in-out infinite}
-.down:hover{background:#e8e8e8;transform:scale(1.1)}
-@keyframes bob{50%{transform:translateY(4px)}}
+/* HERO — mirrors the Framer layout: a fixed-size stage per breakpoint
+   (>=1920 / 1300-1919 / 768-1299 / <768) with absolutely placed parts */
+.hero{position:relative;overflow:hidden;background:#f2f2f2;height:100vh;padding:164px 0;
+  display:flex;align-items:center;justify-content:center}
+.hero-pattern{position:absolute;top:0;bottom:0;left:-150%;width:400%;opacity:.04;pointer-events:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath fill='%23FFF' d='M0 0h96v96H0Z'/%3E%3Cpath d='M24 20a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 48a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm48 0a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0-48a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z'/%3E%3C/svg%3E") 0 0/48px 48px repeat}
+.hero-box{position:relative;flex:none;width:1174px;height:455px}
+.hero-box>*{position:absolute;margin:0}
 
-/* hero entrance */
-.appear{opacity:0;transform:translateY(24px);filter:blur(6px);animation:appear .9s var(--ease) var(--d,0s) forwards}
-.appear.pop{transform:scale(.6) rotate(-8deg);animation-name:pop;animation-timing-function:var(--spring)}
-@keyframes appear{to{opacity:1;transform:none;filter:none}}
-@keyframes pop{to{opacity:1;transform:none;filter:none}}
+.pill{top:23%;left:50%;translate:-50% -50%;display:flex;align-items:center;gap:9.66px;padding:9.66px 19.33px;
+  box-shadow:inset 0 0 0 1.21px #1110111a;border-radius:29px;background:#ffffff4d;overflow:hidden;white-space:nowrap;
+  font:700 17px/23.8px Inter,sans-serif;color:#111011}
+.headline{top:49%;left:50%;translate:-50% -50%;width:516px;text-align:center;text-wrap:balance;
+  font:700 40px/48px Manrope,sans-serif;color:#000}
+.avatar{z-index:1;width:170px;height:175px;top:calc(52.8509% - 87.5px);left:calc(70.8688% - 85px);
+  filter:drop-shadow(0 1.21px 3px #00000026)}
+.keys{z-index:1;width:128px;height:163px;top:calc(25.8772% - 81.5px);left:calc(30.8348% - 64px);
+  object-fit:cover;filter:drop-shadow(0 1.21px 3px #00000026)}
+.note{z-index:1;width:277px;top:88%;left:24%;translate:-50% -50%;
+  font:400 18px/35.0415px 'Architects Daughter',cursive;letter-spacing:.54px;color:#1e1e1e}
+.note-arrow{width:106px;height:36px;top:calc(89.1247% - 18.115px);left:calc(33.5391% - 53.145px)}
+.note-arrow svg{position:absolute;inset:0;margin:auto;width:98.1%;height:94.4%;overflow:visible}
+.toolbar{z-index:1;top:77%;left:64%;translate:-50% -50%;display:flex;align-items:center;gap:9.66px;padding:9.66px;
+  background:#2d2d2d;border-radius:10px;overflow:hidden}
+.tool{position:relative;flex:none;width:29px;height:29px;border-radius:5px;cursor:pointer;
+  transition:background-color .45s var(--spring)}
+.tool svg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tool-active{cursor:default}
+.tool:not(.tool-active):hover{background:#424242}
 
-/* floating stickers gently follow the mouse (set by JS) */
-.keys,.avatar{translate:var(--px,0) var(--py,0);transition:translate .6s var(--ease)}
+.down{position:absolute;bottom:33px;left:50%;translate:-50% 0;z-index:1;display:flex;align-items:center;justify-content:center;
+  width:36px;height:36px;padding:10px 8px;border-radius:8px;background:#f5f5f5}
+.down svg{flex:none;stroke:#919191;transition:stroke .45s var(--spring)}
+.down:hover svg{stroke:#1f1d1b}
+
+/* appear when scrolled into view (Framer: y 32 -> 0, opacity 0 -> 1, delay .3s, .6s) */
+.appear{opacity:0;transform:translateY(32px);
+  transition:opacity .6s cubic-bezier(.5,0,.88,.77) .3s,transform .6s cubic-bezier(.5,0,.88,.77) .3s}
+.appear.in{opacity:1;transform:none}
+
+/* hover springs (Framer: spring, bounce .2, .4s) */
+.avatar.appear,.toolbar.appear{transition:opacity .6s cubic-bezier(.5,0,.88,.77) .3s,transform .6s cubic-bezier(.5,0,.88,.77) .3s,
+  scale .45s var(--spring),rotate .45s var(--spring)}
+.avatar:hover{scale:1.1;rotate:10deg}
+.toolbar:hover{scale:1.1}
+
+@media (min-width:1920px){
+  .hero-box{width:1716px;height:666px}
+  .pill{gap:14.12px;padding:14.12px 28.25px;box-shadow:inset 0 0 0 1.77px #1110111a;border-radius:42px;font-size:25px;line-height:35px}
+  .headline{width:754px;font-size:58px;line-height:69.6px}
+  .avatar{width:248px;height:256px;top:calc(52.8509% - 127.895px);left:calc(70.8688% - 124.24px);filter:drop-shadow(0 1.77px 3px #00000026)}
+  .keys{width:187px;height:238px;top:calc(25.8772% - 119.125px);left:calc(30.8348% - 93.545px);filter:drop-shadow(0 1.77px 3px #00000026)}
+  .note{width:405px;top:83%;left:26%;font-size:26px;line-height:51.2191px;letter-spacing:.78px}
+  .note-arrow{width:155px;height:53px;top:calc(84.8348% - 26.5px);left:calc(35.2564% - 77.5px)}
+  .toolbar{gap:9.81px;padding:9.81px;top:76%;left:67%}
+}
+@media (min-width:768px) and (max-width:1299.98px){
+  .hero{height:auto}
+  .hero-box{width:1044px;height:405px}
+  .pill{gap:8.59px;padding:8.59px 17.19px;box-shadow:inset 0 0 0 1.08px #1110111a;border-radius:26px;font-size:15px;line-height:21px}
+  .headline{width:459px;font-size:36px;line-height:43.2px}
+  .avatar{width:151px;height:156px;top:calc(60.7427% - 77.87px);left:calc(74.5885% - 75.72px);filter:drop-shadow(0 1.08px 3px #00000026)}
+  .keys{width:114px;height:145px;top:calc(25.8772% - 72.5px);left:calc(30.8348% - 56.925px);filter:drop-shadow(0 1.08px 3px #00000026)}
+  .note{width:246px;top:91%;left:30%;font-size:16px;line-height:31.1612px;letter-spacing:.48px}
+  .note-arrow{width:95px;height:32px;top:calc(92.3077% - 16.11px);left:calc(39.6091% - 47.26px)}
+  .toolbar{gap:9.74px;padding:9.74px;top:80%;left:59%}
+}
+@media (max-width:767.98px){
+  .hero{height:auto;background:transparent;align-items:flex-start;padding:120px 0 164px}
+  .hero-box{width:361px;height:619px}
+  .pill{top:35%;left:53%;gap:7.96px;padding:7.96px 15.92px;box-shadow:inset 0 0 0 1px #1110111a;border-radius:24px;font-size:14px;line-height:19.6px}
+  .headline{width:425px;font-size:33px;line-height:39.6px}
+  .avatar{width:140px;height:144px;top:calc(73.3688% - 72.125px);left:calc(76.584% - 70.135px);filter:drop-shadow(0 1px 3px #00000026)}
+  .keys{width:106px;height:135px;top:calc(30.6947% - 67.5px);left:calc(9.36455% - 53px);filter:drop-shadow(0 1px 3px #00000026)}
+  .note{width:228px;top:70%;left:38%;font-size:15px;line-height:28.8634px;letter-spacing:.45px}
+  .note-arrow{width:88px;height:30px;top:calc(77.3635% - 14.92px);left:calc(40.4959% - 43.775px)}
+  .toolbar{gap:9.93px;padding:9.93px;top:88%;left:35%}
+  .tool{width:29.79px;height:29.79px}
+  .down{display:none}
+}
 
 /* WORK */
 .work{padding:72px 40px 96px;max-width:1360px;margin:0 auto}
@@ -104,15 +155,11 @@ button{font:inherit;border:0;background:none;color:inherit}
   .nav a{margin:0 8px;font-size:15px}
   .grid{grid-template-columns:1fr;gap:40px}
   .work{padding:48px 16px 64px}
-  .avatar{right:-10px;top:190px;width:100px}
-  .keys{left:-6px;top:0;width:64px}
-  .note{left:0;top:300px}
-  .toolbar{left:0;margin-top:150px}
   .footer{padding:32px 16px 48px}
   .links{grid-template-columns:1fr}
 }
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
-  .appear,.reveal,.slide-in{opacity:1;transform:none;filter:none}
+  .appear,.reveal,.slide-in{opacity:1;transform:none}
 }

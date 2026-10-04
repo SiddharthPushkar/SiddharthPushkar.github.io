@@ -11,25 +11,13 @@ if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion
     requestAnimationFrame(loop);
   })();
 
-  // subtle parallax on the floating hero stickers
-  const hero = document.querySelector('.hero');
-  const floaters = document.querySelectorAll('.keys, .avatar');
-  hero.addEventListener('mousemove', e => {
-    const r = hero.getBoundingClientRect();
-    const dx = (e.clientX - r.width / 2) / r.width, dy = (e.clientY - r.height / 2) / r.height;
-    floaters.forEach((el, i) => {
-      const k = i ? -14 : 18;
-      el.style.setProperty('--px', `${dx * k}px`);
-      el.style.setProperty('--py', `${dy * k}px`);
-    });
-  });
 }
 
-// Toolbar: clicking a tool makes it the active one
-document.querySelectorAll('.tool').forEach(t => t.addEventListener('click', () => {
-  document.querySelector('.tool.active')?.classList.remove('active');
-  t.classList.add('active');
-}));
+// Hero parts fade up once half of each is in view (as in the Framer original)
+const appear = new IntersectionObserver(entries => entries.forEach(en => {
+  if (en.isIntersecting) { en.target.classList.add('in'); appear.unobserve(en.target); }
+}), { threshold: 0.5 });
+document.querySelectorAll('.appear').forEach(el => appear.observe(el));
 
 // Scroll reveal for cards and footer contact info
 const io = new IntersectionObserver(entries => entries.forEach(en => {
