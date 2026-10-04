@@ -18,6 +18,7 @@ button{font:inherit;border:0;background:none;color:inherit}
 .cursor svg{display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.2))}
 .has-cursor, .has-cursor *{cursor:none !important}
 .has-cursor .cursor.on{opacity:1}
+.cursor.hidden{opacity:0!important}
 
 /* ROLLING TEXT (nav + footer links) */
 .roll{position:relative;display:inline-block;overflow:hidden;vertical-align:top}
@@ -39,7 +40,7 @@ button{font:inherit;border:0;background:none;color:inherit}
   display:flex;align-items:center;justify-content:center}
 .hero-pattern{position:absolute;top:0;bottom:0;left:-150%;width:400%;opacity:.04;pointer-events:none;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath fill='%23FFF' d='M0 0h96v96H0Z'/%3E%3Cpath d='M24 20a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 48a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm48 0a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0-48a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z'/%3E%3C/svg%3E") 0 0/48px 48px repeat}
-.hero-box{position:relative;flex:none;width:1174px;height:455px}
+.hero-box{position:relative;isolation:isolate;flex:none;width:1174px;height:455px}
 .hero-box>*{position:absolute;margin:0}
 
 .pill{top:23%;left:50%;translate:-50% -50%;display:flex;align-items:center;gap:9.66px;padding:9.66px 19.33px;
@@ -55,13 +56,56 @@ button{font:inherit;border:0;background:none;color:inherit}
   font:400 18px/35.0415px 'Architects Daughter',cursive;letter-spacing:.54px;color:#1e1e1e}
 .note-arrow{width:106px;height:36px;top:calc(89.1247% - 18.115px);left:calc(33.5391% - 53.145px)}
 .note-arrow svg{position:absolute;inset:0;margin:auto;width:98.1%;height:94.4%;overflow:visible}
-.toolbar{z-index:1;top:77%;left:64%;translate:-50% -50%;display:flex;align-items:center;gap:9.66px;padding:9.66px;
+.toolbar{z-index:1000;top:77%;left:64%;translate:-50% -50%;display:flex;align-items:center;gap:9.66px;padding:9.66px;
   background:#2d2d2d;border-radius:10px;overflow:hidden}
 .tool{position:relative;flex:none;width:29px;height:29px;border-radius:5px;cursor:pointer;
   transition:background-color .45s var(--spring)}
 .tool svg{position:absolute;inset:0;width:100%;height:100%;display:block}
-.tool-active{cursor:default}
-.tool:not(.tool-active):hover{background:#424242}
+.tool.is-active{background:#f05829}
+.tool:not(.is-active):hover{background:#424242}
+.tool:focus-visible{outline:2px solid #fff;outline-offset:1px}
+
+/* toolbar tools: transparent drawing layer + the things you can create */
+.draw-layer{position:absolute;inset:0;z-index:2;touch-action:none;cursor:crosshair}
+.draw-layer[hidden]{display:none}
+.draw-layer[data-tool="text"]{cursor:text}
+.has-cursor .draw-layer{cursor:crosshair!important}
+.has-cursor .draw-layer[data-tool="text"]{cursor:text!important}
+.has-cursor .obj.editing,.has-cursor .obj.editing *{cursor:text!important}
+.obj{position:absolute;transform:translate(var(--dx,0px),var(--dy,0px));user-select:none;-webkit-user-select:none}
+.obj.selected{outline:1.5px solid #0d99ff;outline-offset:2px}
+/* frame drawn like the logo's frame: thin navy line, hollow square handles on the corners */
+.obj-frame{border:1px solid #013473}
+.obj-frame::after{content:"";position:absolute;inset:-3.5px;pointer-events:none;background:
+  linear-gradient(#fff,#fff) 1px 1px/4px 4px no-repeat,
+  linear-gradient(#fff,#fff) calc(100% - 1px) 1px/4px 4px no-repeat,
+  linear-gradient(#fff,#fff) 1px calc(100% - 1px)/4px 4px no-repeat,
+  linear-gradient(#fff,#fff) calc(100% - 1px) calc(100% - 1px)/4px 4px no-repeat,
+  linear-gradient(#013473,#013473) 0 0/6px 6px no-repeat,
+  linear-gradient(#013473,#013473) 100% 0/6px 6px no-repeat,
+  linear-gradient(#013473,#013473) 0 100%/6px 6px no-repeat,
+  linear-gradient(#013473,#013473) 100% 100%/6px 6px no-repeat}
+.obj-frame.selected{outline:none;border-color:#0d99ff}
+.obj-rect{background:#d9d9d9}
+.obj-pen{overflow:visible;pointer-events:none}
+.obj-pen path.stroke{fill:none;stroke:#1e1e1e;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;pointer-events:stroke}
+.obj-pen path.preview{fill:none;stroke:#0d99ff;stroke-width:1.5;pointer-events:none}
+.obj-pen .pen-ui{pointer-events:none}
+.obj-pen .pen-ui line{stroke:#0d99ff;stroke-width:1}
+.obj-pen .pen-ui circle{fill:#fff;stroke:#0d99ff;stroke-width:1.5}
+.obj-pen .pen-ui rect{fill:#fff;stroke:#0d99ff;stroke-width:1.5}
+.obj-pen .pen-ui rect.first{fill:#0d99ff}
+.obj-pen.selected{outline:none}
+.obj-pen.selected path.stroke{stroke:#0d99ff}
+.obj-text{min-width:4px;padding:2px 4px;font:700 24px/1.3 Manrope,sans-serif;color:#000;white-space:pre;outline-offset:2px}
+.obj-text:empty::before{content:"Type something";color:#9a9a9a}
+.obj-comment{display:flex;align-items:flex-start;gap:8px}
+.obj-comment .pin{flex:none;display:grid;place-items:center;width:32px;height:32px;border-radius:50% 50% 50% 0;
+  background:#f05829;color:#fff;font:700 12px/1 Inter,sans-serif;box-shadow:0 2px 8px #0003}
+.obj-comment .bubble{min-width:160px;max-width:240px;padding:10px 12px;border-radius:10px;background:#fff;
+  box-shadow:0 4px 16px #0002;font:500 14px/1.4 Manrope,sans-serif;color:#1e1e1e;white-space:pre-wrap;outline:none}
+.obj-comment .bubble:empty::before{content:"Add a comment… (Enter to post)";color:#9a9a9a}
+.obj.editing{user-select:text;-webkit-user-select:text}
 
 .down{position:absolute;bottom:33px;left:50%;translate:-50% 0;z-index:1;display:flex;align-items:center;justify-content:center;
   width:36px;height:36px;padding:10px 8px;border-radius:8px;background:#f5f5f5}
@@ -69,9 +113,14 @@ button{font:inherit;border:0;background:none;color:inherit}
 .down:hover svg{stroke:#1f1d1b}
 
 /* appear when scrolled into view (Framer: y 32 -> 0, opacity 0 -> 1, delay .3s, .6s) */
-.appear{opacity:0;transform:translateY(32px);
+.appear{opacity:0;transform:translate(var(--dx,0px),calc(var(--dy,0px) + 32px));
   transition:opacity .6s cubic-bezier(.5,0,.88,.77) .3s,transform .6s cubic-bezier(.5,0,.88,.77) .3s}
-.appear.in{opacity:1;transform:none}
+.appear.in{opacity:1;transform:translate(var(--dx,0px),var(--dy,0px))}
+
+/* drag anything in the hero (offset kept in --dx/--dy, set by main.js) */
+.hero-box>*{cursor:grab;user-select:none;-webkit-user-select:none;touch-action:none}
+.hero-box img{-webkit-user-drag:none}
+.hero-box .dragging{cursor:grabbing;transition:opacity 0s,scale .45s var(--spring),rotate .45s var(--spring)!important}
 
 /* hover springs (Framer: spring, bounce .2, .4s) */
 .avatar.appear,.toolbar.appear{transition:opacity .6s cubic-bezier(.5,0,.88,.77) .3s,transform .6s cubic-bezier(.5,0,.88,.77) .3s,
@@ -192,4 +241,5 @@ button{font:inherit;border:0;background:none;color:inherit}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none !important;transition:none !important}
   .appear,.reveal,.slide-x{opacity:1;transform:none}
+  .appear{transform:translate(var(--dx,0px),var(--dy,0px))}
 }
