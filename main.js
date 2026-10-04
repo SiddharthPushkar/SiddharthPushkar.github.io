@@ -10,11 +10,6 @@ if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion
     cursor.style.transform = `translate(${cx - 2}px, ${cy - 2}px)`;
     requestAnimationFrame(loop);
   })();
-  // hide the arrow over project cards, where the card's own chip takes over
-  document.querySelectorAll('.card').forEach(c => {
-    c.addEventListener('mouseenter', () => cursor.classList.add('hidden'));
-    c.addEventListener('mouseleave', () => cursor.classList.remove('hidden'));
-  });
 
   // subtle parallax on the floating hero stickers
   const hero = document.querySelector('.hero');

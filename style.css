@@ -17,7 +17,6 @@ button{font:inherit;border:0;background:none;color:inherit}
 .cursor svg{display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.2))}
 .has-cursor, .has-cursor *{cursor:none !important}
 .has-cursor .cursor.on{opacity:1}
-.cursor.hidden{opacity:0 !important;scale:.4}
 
 /* ROLLING TEXT (nav + footer links) */
 .roll{position:relative;display:inline-block;overflow:hidden;vertical-align:top}
