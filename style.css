@@ -50,8 +50,10 @@ button{font:inherit;border:0;background:none;color:inherit}
   font:700 40px/48px Manrope,sans-serif;color:#000}
 .avatar{z-index:1;width:170px;height:175px;top:calc(52.8509% - 87.5px);left:calc(70.8688% - 85px);
   filter:drop-shadow(0 1.21px 3px #00000026)}
-.keys{z-index:1;width:128px;height:163px;top:calc(25.8772% - 81.5px);left:calc(30.8348% - 64px);
-  object-fit:cover;filter:drop-shadow(0 1.21px 3px #00000026)}
+/* ⌘ and Z keys: two separate pieces placed where they sat in the original keycap image (--kw = that image's width) */
+.key{z-index:1;height:auto;--kw:128px;--kt:25.8772%;--kl:30.8348%;filter:drop-shadow(0 1.21px 3px #00000026)}
+.key-cmd{width:calc(var(--kw)*.42);top:calc(var(--kt) - var(--kw)*.4225);left:calc(var(--kl) - var(--kw)*.0775)}
+.key-z{width:calc(var(--kw)*.4275);top:calc(var(--kt) + var(--kw)*.0025);left:calc(var(--kl) - var(--kw)*.25)}
 .note{z-index:1;width:277px;top:88%;left:24%;translate:-50% -50%;
   font:400 18px/35.0415px 'Architects Daughter',cursive;letter-spacing:.54px;color:#1e1e1e}
 .note-arrow{width:106px;height:36px;top:calc(89.1247% - 18.115px);left:calc(33.5391% - 53.145px)}
@@ -136,7 +138,7 @@ button{font:inherit;border:0;background:none;color:inherit}
   .pill{gap:14.12px;padding:14.12px 28.25px;box-shadow:inset 0 0 0 1.77px #1110111a;border-radius:42px;font-size:25px;line-height:35px}
   .headline{width:754px;font-size:58px;line-height:69.6px}
   .avatar{width:248px;height:256px;top:calc(52.8509% - 127.895px);left:calc(70.8688% - 124.24px);filter:drop-shadow(0 1.77px 3px #00000026)}
-  .keys{width:187px;height:238px;top:calc(25.8772% - 119.125px);left:calc(30.8348% - 93.545px);filter:drop-shadow(0 1.77px 3px #00000026)}
+  .key{--kw:187px;filter:drop-shadow(0 1.77px 3px #00000026)}
   .note{width:405px;top:83%;left:26%;font-size:26px;line-height:51.2191px;letter-spacing:.78px}
   .note-arrow{width:155px;height:53px;top:calc(84.8348% - 26.5px);left:calc(35.2564% - 77.5px)}
   .toolbar{gap:9.81px;padding:9.81px;top:76%;left:67%}
@@ -147,7 +149,7 @@ button{font:inherit;border:0;background:none;color:inherit}
   .pill{gap:8.59px;padding:8.59px 17.19px;box-shadow:inset 0 0 0 1.08px #1110111a;border-radius:26px;font-size:15px;line-height:21px}
   .headline{width:459px;font-size:36px;line-height:43.2px}
   .avatar{width:151px;height:156px;top:calc(60.7427% - 77.87px);left:calc(74.5885% - 75.72px);filter:drop-shadow(0 1.08px 3px #00000026)}
-  .keys{width:114px;height:145px;top:calc(25.8772% - 72.5px);left:calc(30.8348% - 56.925px);filter:drop-shadow(0 1.08px 3px #00000026)}
+  .key{--kw:114px;filter:drop-shadow(0 1.08px 3px #00000026)}
   .note{width:246px;top:91%;left:30%;font-size:16px;line-height:31.1612px;letter-spacing:.48px}
   .note-arrow{width:95px;height:32px;top:calc(92.3077% - 16.11px);left:calc(39.6091% - 47.26px)}
   .toolbar{gap:9.74px;padding:9.74px;top:80%;left:59%}
@@ -160,10 +162,10 @@ button{font:inherit;border:0;background:none;color:inherit}
   .pill{top:35%;left:53%;gap:7.96px;padding:7.96px 15.92px;box-shadow:inset 0 0 0 1px #1110111a;border-radius:24px;font-size:14px;line-height:19.6px}
   .headline{width:425px;font-size:33px;line-height:39.6px}
   .avatar{width:140px;height:144px;top:calc(73.3688% - 72.125px);left:calc(76.584% - 70.135px);filter:drop-shadow(0 1px 3px #00000026)}
-  .keys{width:106px;height:135px;top:calc(30.6947% - 67.5px);left:calc(9.36455% - 53px);filter:drop-shadow(0 1px 3px #00000026)}
+  .key{--kw:106px;--kt:30.6947%;--kl:9.36455%;filter:drop-shadow(0 1px 3px #00000026)}
   .note{width:228px;top:70%;left:38%;font-size:15px;line-height:28.8634px;letter-spacing:.45px}
   .note-arrow{width:88px;height:30px;top:calc(77.3635% - 14.92px);left:calc(40.4959% - 43.775px)}
-  .toolbar{gap:9.93px;padding:9.93px;top:88%;left:35%}
+  .toolbar{gap:9.93px;padding:9.93px;top:88%;left:50%}
   .tool{width:29.79px;height:29.79px}
   .down{display:none}
 }
@@ -216,8 +218,9 @@ button{font:inherit;border:0;background:none;color:inherit}
   transition:opacity 1.5s cubic-bezier(.35,0,0,1) .3s,transform 1.5s cubic-bezier(.35,0,0,1) .3s}
 .slide-x.in{opacity:1;transform:none}
 .arr{flex:none;display:inline-block;width:16px;height:16px;font-size:0;background:#fff;
-  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.667 1.583H4a.75.75 0 0 0 0 1.5h7.856L1.803 13.136a.75.75 0 1 0 1.061 1.061L12.917 4.144V12a.75.75 0 0 0 1.5 0V2.333a.75.75 0 0 0-.75-.75Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.667 1.583H4a.75.75 0 0 0 0 1.5h7.856L1.803 13.136a.75.75 0 1 0 1.061 1.061L12.917 4.144V12a.75.75 0 0 0 1.5 0V2.333a.75.75 0 0 0-.75-.75Z'/%3E%3C/svg%3E") center/contain no-repeat;transition:rotate .45s var(--snap),opacity .45s var(--snap)}
-.arrow-link>*{transition:opacity .45s var(--snap)}
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.667 1.583H4a.75.75 0 0 0 0 1.5h7.856L1.803 13.136a.75.75 0 1 0 1.061 1.061L12.917 4.144V12a.75.75 0 0 0 1.5 0V2.333a.75.75 0 0 0-.75-.75Z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.667 1.583H4a.75.75 0 0 0 0 1.5h7.856L1.803 13.136a.75.75 0 1 0 1.061 1.061L12.917 4.144V12a.75.75 0 0 0 1.5 0V2.333a.75.75 0 0 0-.75-.75Z'/%3E%3C/svg%3E") center/contain no-repeat}
+/* text fades and the arrow turns together; one rule so the arrow keeps its rotate transition */
+.arrow-link>*{transition:opacity .5s var(--ease),rotate .5s var(--ease)}
 .arrow-link:hover>*,.arrow-link:focus-visible>*{opacity:.5}
 .arrow-link:hover .arr,.arrow-link:focus-visible .arr{rotate:45deg}
 @media (min-width:768px) and (max-width:1299.98px){
