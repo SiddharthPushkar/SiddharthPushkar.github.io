@@ -126,6 +126,9 @@ button{font:inherit;border:0;background:none;color:inherit}
 .avatar.appear,.toolbar.appear{transition:opacity .6s cubic-bezier(.5,0,.88,.77) .3s,transform .6s cubic-bezier(.5,0,.88,.77) .3s,
   scale .45s var(--spring),rotate .45s var(--spring)}
 .avatar:hover{scale:1.1;rotate:10deg}
+.avatar.moved:hover{scale:none;rotate:none}
+/* grabbing the avatar mid-hover: drop the zoom/tilt at once instead of springing back while dragging */
+.hero-box .avatar.dragging{transition:opacity 0s,scale 0s,rotate 0s!important}
 .toolbar:hover{scale:1.1}
 
 @media (min-width:1920px){

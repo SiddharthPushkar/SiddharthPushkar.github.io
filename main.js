@@ -25,6 +25,26 @@ const layer = document.querySelector('.draw-layer');
 const toolbar = document.querySelector('.toolbar');
 let topZ = 2, tool = 'move', selected = null;
 
+// Undo / redo history: each entry is { undo, redo }; undo returns false if there was nothing left to revert
+const history = [], redoStack = [];
+const record = (undo, redo) => { history.push({ undo, redo }); redoStack.length = 0; };
+const place = (el, parent, next) => parent.insertBefore(el, next?.parentNode === parent ? next : null);
+function undo() {
+  if (pen) {   // mid-path: drop the last point, like Figma
+    if (pen.nodes.length > 1) { pen.nodes.pop(); penDraw(); } else penFinish();
+    return;
+  }
+  while (history.length) {
+    const a = history.pop();
+    if (a.undo() !== false) { redoStack.push(a); return; }
+  }
+}
+function redo() {
+  penFinish();
+  const a = redoStack.pop();
+  if (a) { a.redo(); history.push(a); }
+}
+
 const select = el => {
   selected?.classList.remove('selected');
   selected = el;
@@ -50,12 +70,24 @@ function makeDraggable(el, onTap) {
       }
       el.style.setProperty('--dx', `${dx + ev.clientX - sx}px`);
       el.style.setProperty('--dy', `${dy + ev.clientY - sy}px`);
+      el.classList.toggle('moved', dx + ev.clientX - sx !== 0 || dy + ev.clientY - sy !== 0);
     };
     const up = ev => {
       el.classList.remove('dragging');
       el.removeEventListener('pointermove', move);
       el.removeEventListener('pointerup', up);
       el.removeEventListener('pointercancel', up);
+      if (moved) {
+        const nx = el.style.getPropertyValue('--dx'), ny = el.style.getPropertyValue('--dy');
+        // .moved = off its original spot (the avatar drops its hover zoom then)
+        const to = (x, y) => {
+          el.style.setProperty('--dx', x);
+          el.style.setProperty('--dy', y);
+          el.classList.toggle('moved', parseFloat(x) !== 0 || parseFloat(y) !== 0);
+        };
+        to(nx, ny);
+        record(() => { if (!el.isConnected) return false; to(`${dx}px`, `${dy}px`); }, () => to(nx, ny));
+      }
       if (!moved && ev.type === 'pointerup') onTap?.(e);   // use the press target: capture retargets pointerup
     };
     el.addEventListener('pointermove', move);
@@ -99,6 +131,11 @@ function addObj(cls, x, y) {
   el.style.zIndex = ++topZ;
   box.append(el);
   makeDraggable(el, () => select(el));
+  record(() => {
+    if (!el.isConnected) return false;   // e.g. an empty text box that already removed itself
+    if (selected === el) select(null);
+    el.remove();
+  }, () => box.append(el));
   return el;
 }
 function editText(el, target = el) {
@@ -183,6 +220,34 @@ function penDown(e) {
 }
 layer.addEventListener('pointermove', e => { if (tool === 'pen' && pen && !pen.dragging) penDraw(layerPt(e)); });
 
+// Pencil = freehand: press and drag to sketch a stroke; the tool stays on for the next one
+function pencilDown(e) {
+  const r = box.getBoundingClientRect(), h = layer.getBoundingClientRect();
+  const el = addObj('obj-pen', h.left - r.left, h.top - r.top);
+  el.style.width = `${h.width}px`;
+  el.style.height = `${h.height}px`;
+  el.innerHTML = '<svg width="100%" height="100%" style="overflow:visible"><path class="stroke"/></svg>';
+  const path = el.querySelector('path'), p = layerPt(e);
+  let d = `M${p.x} ${p.y} L${p.x} ${p.y}`, last = p;
+  path.setAttribute('d', d);
+  try { layer.setPointerCapture(e.pointerId); } catch {}
+  const move = ev => {
+    const q = layerPt(ev);
+    if (Math.hypot(q.x - last.x, q.y - last.y) < 1.5) return;
+    d += ` L${q.x} ${q.y}`;
+    last = q;
+    path.setAttribute('d', d);
+  };
+  const up = () => {
+    layer.removeEventListener('pointermove', move);
+    layer.removeEventListener('pointerup', up);
+    layer.removeEventListener('pointercancel', up);
+  };
+  layer.addEventListener('pointermove', move);
+  layer.addEventListener('pointerup', up);
+  layer.addEventListener('pointercancel', up);
+}
+
 layer.addEventListener('pointerdown', e => {
   if (e.button !== 0) return;
   // The toolbar sits underneath the layer: clicks on it should still pick tools
@@ -194,6 +259,7 @@ layer.addEventListener('pointerdown', e => {
   }
   e.preventDefault();
   if (tool === 'pen') return penDown(e);
+  if (tool === 'pencil') return pencilDown(e);
   const p = toBox(e);
 
   if (tool === 'text') {
@@ -243,15 +309,26 @@ document.querySelector('.hero').addEventListener('pointerdown', e => {
   if (tool === 'move' && !e.target.closest('.obj')) select(null);
 });
 
-// Shortcuts: V F R P T C pick tools, Esc returns to Move, Delete removes the selection
+// Shortcuts: V F R P T C pick tools (Shift+P = Pencil), Esc returns to Move, Delete removes the selection,
+// Ctrl/Cmd+Z undoes, Ctrl/Cmd+Shift+Z or Ctrl+Y redoes
 const keys = { v: 'move', f: 'frame', r: 'rect', p: 'pen', t: 'text', c: 'comment' };
 addEventListener('keydown', e => {
-  if (e.target.isContentEditable || /INPUT|TEXTAREA/.test(e.target.tagName) || e.ctrlKey || e.metaKey || e.altKey) return;
-  const k = e.key.toLowerCase();
+  if (e.target.isContentEditable || /INPUT|TEXTAREA/.test(e.target.tagName)) return;   // native undo while typing
+  const k = e.key.toLowerCase(), mod = (e.ctrlKey || e.metaKey) && !e.altKey;
+  if (mod && k === 'z') { e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
+  if (mod && k === 'y' && !e.shiftKey) { e.preventDefault(); redo(); return; }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (pen && (k === 'enter' || k === 'escape')) { e.preventDefault(); penFinish(); return; }
-  if (keys[k]) setTool(keys[k]);
+  if (k === 'p' && e.shiftKey) setTool('pencil');
+  else if (keys[k]) setTool(keys[k]);
   else if (k === 'escape') { setTool('move'); select(null); }
-  else if ((k === 'delete' || k === 'backspace') && selected) { e.preventDefault(); selected.remove(); selected = null; }
+  else if ((k === 'delete' || k === 'backspace') && selected) {
+    e.preventDefault();
+    const el = selected, parent = el.parentNode, next = el.nextSibling;
+    el.remove();
+    selected = null;
+    record(() => place(el, parent, next), () => { if (selected === el) select(null); el.remove(); });
+  }
 });
 
 // Scroll reveal for project cards
