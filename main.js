@@ -34,3 +34,8 @@ document.querySelectorAll('[data-dims]').forEach(label => {
     label.textContent = `${Math.round(e.contentRect.width)} × ${Math.round(e.contentRect.height)}`;
   }).observe(label.parentElement);
 });
+
+// Reduced motion: don't autoplay looping videos; give them controls so they can still be played
+if (matchMedia('(prefers-reduced-motion:reduce)').matches) {
+  document.querySelectorAll('video[autoplay]').forEach(v => { v.autoplay = false; v.pause(); v.controls = true; });
+}
