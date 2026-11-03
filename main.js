@@ -13,6 +13,25 @@ if (matchMedia('(pointer:fine)').matches && !matchMedia('(prefers-reduced-motion
 
 }
 
+// Header: hide on scroll down, reappear on scroll up
+const navWrap = document.querySelector('.nav-wrap');
+if (navWrap) {
+  let lastY = scrollY, ticking = false;
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const y = Math.max(scrollY, 0), dy = y - lastY;
+      if (y < 80 || dy < -4) navWrap.classList.remove('nav-hidden');
+      else if (dy > 4) navWrap.classList.add('nav-hidden');
+      if (Math.abs(dy) > 4) lastY = y;
+      ticking = false;
+    });
+  }, { passive: true });
+  // keep it visible while keyboard focus is inside it
+  navWrap.addEventListener('focusin', () => navWrap.classList.remove('nav-hidden'));
+}
+
 // Hero parts fade up once half of each is in view (as in the Framer original)
 const appear = new IntersectionObserver(entries => entries.forEach(en => {
   if (en.isIntersecting) { en.target.classList.add('in'); appear.unobserve(en.target); }

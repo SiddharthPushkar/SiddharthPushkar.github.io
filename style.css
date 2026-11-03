@@ -30,6 +30,9 @@ button{font:inherit;border:0;background:none;color:inherit}
 /* NAV */
 .nav-wrap{position:fixed;inset:0 0 auto 0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:10px max(40px,calc((100vw - 1280px)/2));pointer-events:none}
 .nav-wrap>*{pointer-events:auto}
+.nav-wrap{transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.nav-wrap.nav-hidden{transform:translateY(-110%)}
+@media (prefers-reduced-motion:reduce){.nav-wrap{transition:none}}
 .logo img{display:block;width:122px;height:auto;transition:transform .4s var(--spring)}
 .logo:hover img{transform:rotate(-3deg) scale(1.04)}
 .nav{display:flex;gap:6px;background:#fff;border-radius:999px;padding:10px 26px;box-shadow:0 2px 14px rgba(0,0,0,.08)}
