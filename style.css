@@ -37,7 +37,8 @@ button{font:inherit;border:0;background:none;color:inherit}
 
 /* HERO — mirrors the Framer layout: a fixed-size stage per breakpoint
    (>=1920 / 1300-1919 / 768-1299 / <768) with absolutely placed parts */
-.hero{position:relative;overflow:hidden;background:#f2f2f2;height:100vh;padding:164px 0;
+/* fills the viewport; min-height keeps the canvas clear of the fixed nav on short screens */
+.hero{position:relative;overflow:hidden;background:#f2f2f2;height:100svh;min-height:calc(455px + 160px);padding:80px 0;
   display:flex;align-items:center;justify-content:center}
 .hero-pattern{position:absolute;top:0;bottom:0;left:-150%;width:400%;opacity:.04;pointer-events:none;
   background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96'%3E%3Cpath fill='%23FFF' d='M0 0h96v96H0Z'/%3E%3Cpath d='M24 20a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0 48a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm48 0a4 4 0 1 1 0 8 4 4 0 0 1 0-8Zm0-48a4 4 0 1 1 0 8 4 4 0 0 1 0-8Z'/%3E%3C/svg%3E") 0 0/48px 48px repeat}
@@ -135,6 +136,7 @@ button{font:inherit;border:0;background:none;color:inherit}
 .toolbar:hover{scale:1.1}
 
 @media (min-width:1920px){
+  .hero{min-height:calc(666px + 160px)}
   .hero-box{width:1716px;height:666px}
   .pill{gap:14.12px;padding:14.12px 28.25px;box-shadow:inset 0 0 0 1.77px #1110111a;border-radius:42px;font-size:25px;line-height:35px}
   .headline{width:754px;font-size:58px;line-height:69.6px}
@@ -145,7 +147,7 @@ button{font:inherit;border:0;background:none;color:inherit}
   .toolbar{gap:9.81px;padding:9.81px;top:76%;left:67%}
 }
 @media (min-width:768px) and (max-width:1299.98px){
-  .hero{height:auto}
+  .hero{min-height:calc(405px + 160px)}
   .hero-box{width:1044px;height:405px}
   .pill{gap:8.59px;padding:8.59px 17.19px;box-shadow:inset 0 0 0 1.08px #1110111a;border-radius:26px;font-size:15px;line-height:21px}
   .headline{width:459px;font-size:36px;line-height:43.2px}
@@ -158,7 +160,7 @@ button{font:inherit;border:0;background:none;color:inherit}
 @media (max-width:767.98px){
   .thumb{border-radius:16px}
   .chip{display:none}
-  .hero{height:auto;background:transparent;align-items:flex-start;padding:120px 0 164px}
+  .hero{height:auto;min-height:100svh;background:transparent;align-items:flex-start;padding:120px 0 164px}
   .hero-box{width:361px;height:619px}
   .pill{top:35%;left:53%;gap:7.96px;padding:7.96px 15.92px;box-shadow:inset 0 0 0 1px #1110111a;border-radius:24px;font-size:14px;line-height:19.6px}
   .headline{width:425px;font-size:33px;line-height:39.6px}
