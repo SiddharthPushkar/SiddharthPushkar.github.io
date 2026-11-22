@@ -1,0 +1,16 @@
+/* Whiteboard look for the project cards: loose paper cards, slightly tilted, pinned to the board */
+.pcard{rotate:var(--r,0deg);border-radius:6px;padding:14px 14px 20px;
+  box-shadow:0 1px 1px #0000001a,0 8px 18px rgba(0,0,0,.1),0 22px 40px rgba(0,0,0,.06);
+  transition:rotate .35s var(--spring),box-shadow .25s,scale .25s var(--spring)}
+.pcard:hover{rotate:0deg;box-shadow:0 1px 1px #0000001a,0 14px 28px rgba(0,0,0,.14),0 30px 60px rgba(0,0,0,.08)}
+.pcard.drag{rotate:0deg;scale:1.04;box-shadow:0 30px 70px rgba(0,0,0,.22)}
+.pcard .thumb{border-radius:3px}
+.pcard h2{font-family:Manrope,sans-serif}
+
+/* push-pin */
+.pin{position:absolute;left:50%;top:-9px;translate:-50% 0;width:18px;height:18px;border-radius:50%;z-index:2;
+  background:radial-gradient(circle at 35% 30%,#ffffff99 0 12%,transparent 35%),var(--pin,#ee7027);
+  box-shadow:0 3px 6px rgba(0,0,0,.3),inset 0 -2px 3px rgba(0,0,0,.25)}
+
+/* handwritten feel for the small label, matching the old hero note */
+.pcard small{font-family:'Architects Daughter',Manrope,sans-serif;font-weight:400;font-size:15px;letter-spacing:0;text-transform:none}

@@ -1,0 +1,42 @@
+/* WORK: a full-screen design canvas. No page scroll, no website chrome. */
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;background:#f2f2f2}
+.board-wrap{position:fixed;inset:0;overflow:hidden;touch-action:none;background:#f2f2f2}
+.board-grid{position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(circle,#1e1e1e30 1.4px,transparent 1.6px);background-size:28px 28px}
+.board{position:absolute;top:0;left:0;width:0;height:0;transform-origin:0 0;will-change:transform}
+
+/* title block sits on the canvas like any other layer */
+.board-title{position:absolute;left:0;top:0;width:560px}
+.board-title .pill{position:static;translate:none;display:inline-flex}
+.board-title h1{margin-top:22px;font:700 60px/1.02 Manrope,sans-serif;letter-spacing:-.03em}
+.board-title p{margin-top:16px;max-width:38ch;font:500 17px/1.6 Manrope,sans-serif;color:#6b6b6b}
+
+/* section frames, like named frames in Figma */
+.frame{position:absolute;border:1.5px dashed #1e1e1e33;border-radius:20px}
+.frame-label{position:absolute;left:2px;top:-26px;font:500 13px/1 Manrope,sans-serif;color:#6b6b6b;white-space:nowrap}
+
+.pcard{position:absolute;width:var(--w,340px);background:#fff;border-radius:16px;padding:12px 12px 18px;
+  box-shadow:0 1px 0 #0000000d,0 10px 30px rgba(0,0,0,.08);user-select:none;-webkit-user-drag:none;
+  transition:box-shadow .25s,scale .25s var(--spring)}
+.pcard:hover{box-shadow:0 1px 0 #0000000d,0 18px 44px rgba(0,0,0,.14)}
+.pcard.drag{scale:1.03;box-shadow:0 24px 60px rgba(0,0,0,.2)}
+.pcard.sel{outline:2px solid #4f8cff;outline-offset:3px}
+.pcard .tag{position:absolute;left:2px;top:-24px;font:500 12px/1 Manrope,sans-serif;color:#6b6b6b;white-space:nowrap}
+.pcard.sel .tag{color:#4f8cff}
+.pcard .thumb{display:block;overflow:hidden;border-radius:10px;background:#e9e9e9}
+.pcard img{display:block;width:100%;height:auto;pointer-events:none}
+.pcard small{display:block;margin:14px 6px 0;font:600 12px/1 Manrope,sans-serif;letter-spacing:.07em;text-transform:uppercase;color:#6b6b6b}
+.pcard h2{margin:8px 6px 0;font:700 22px/1.15 Manrope,sans-serif;letter-spacing:-.01em}
+.pcard p{margin:8px 6px 0;font:500 14px/1.55 Manrope,sans-serif;color:#4a4a4a}
+.pcard .open{display:inline-flex;margin:14px 6px 0;font:600 14px/1 Manrope,sans-serif}
+
+/* editor-style chrome: logo/back top-left, zoom bar bottom-centre */
+.canvas-logo{position:fixed;left:20px;top:14px;z-index:6}
+.canvas-logo img{display:block;width:110px;height:auto}
+.board-hud{position:fixed;left:50%;bottom:22px;translate:-50% 0;z-index:6;display:flex;gap:4px;align-items:center;
+  background:#1e1e1e;color:#fafafa;border-radius:12px;padding:6px 8px;font:500 13px/1 Manrope,sans-serif;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+.board-hud button{min-width:34px;padding:8px 10px;border-radius:8px}
+.board-hud button:hover{background:#ffffff1f}
+.board-hud [data-zoom]{min-width:48px;text-align:center;opacity:.7}
+.canvas-hint{position:fixed;right:20px;top:20px;z-index:6;font:500 13px/1.4 Manrope,sans-serif;color:#6b6b6b;text-align:right}
+@media (max-width:700px){.canvas-hint{display:none}.board-title h1{font-size:44px}}
