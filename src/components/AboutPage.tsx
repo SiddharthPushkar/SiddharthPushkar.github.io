@@ -127,115 +127,18 @@ const TOOLKIT = [
 ];
 
 export function AboutPage({ onNavigate }: AboutPageProps) {
-  const frameRef = useRef<HTMLDivElement>(null);
-  const moverRef = useRef<HTMLDivElement>(null);
-  const shotRef = useRef<HTMLDivElement>(null);
   const dimsRef = useRef<HTMLSpanElement>(null);
   const expTlRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
-    const frame = frameRef.current;
-    const mover = moverRef.current;
-    const shot = shotRef.current;
     const dims = dimsRef.current;
+    if (!dims || !dims.parentElement) return;
 
-    let ro: ResizeObserver | undefined;
-    if (dims && dims.parentElement) {
-      ro = new ResizeObserver(([e]) => {
-        dims.textContent = `${Math.round(e.contentRect.width)} × ${Math.round(e.contentRect.height)}`;
-      });
-      ro.observe(dims.parentElement);
-    }
-
-    if (!frame || !mover || !shot) {
-      return () => ro?.disconnect();
-    }
-
-    const MIN_W = 120;
-    const MAX_W = 960;
-    let x = 0;
-    let y = 0;
-
-    const place = () => {
-      mover.style.setProperty('--dx', `${x}px`);
-      mover.style.setProperty('--dy', `${y}px`);
-    };
-
-    const floatFrame = () => {
-      if (mover.classList.contains('floating')) return;
-      frame.style.width = `${frame.offsetWidth}px`;
-      frame.style.height = `${frame.offsetHeight}px`;
-      mover.style.width = `${mover.offsetWidth}px`;
-      mover.classList.add('floating');
-    };
-
-    const track = (e: PointerEvent, onMove: (dx: number, dy: number) => void) => {
-      e.preventDefault();
-      e.stopPropagation();
-      floatFrame();
-      const target = e.target as HTMLElement;
-      try {
-        target.setPointerCapture(e.pointerId);
-      } catch {
-        // ignore
-      }
-      mover.classList.add('dragging');
-      const sx = e.clientX;
-      const sy = e.clientY;
-      const move = (ev: PointerEvent) => onMove(ev.clientX - sx, ev.clientY - sy);
-      const up = () => {
-        mover.classList.remove('dragging');
-        target.removeEventListener('pointermove', move);
-        target.removeEventListener('pointerup', up);
-        target.removeEventListener('pointercancel', up);
-      };
-      target.addEventListener('pointermove', move);
-      target.addEventListener('pointerup', up);
-      target.addEventListener('pointercancel', up);
-    };
-
-    const onMoverDown = (e: PointerEvent) => {
-      const target = e.target as HTMLElement;
-      if (e.button !== 0 || target.classList.contains('h') || target.closest('button')) return;
-      const x0 = x;
-      const y0 = y;
-      track(e, (dx, dy) => {
-        x = x0 + dx;
-        y = y0 + dy;
-        place();
-      });
-    };
-    mover.addEventListener('pointerdown', onMoverDown);
-
-    const handleCleanups: Array<() => void> = [];
-    mover.querySelectorAll<HTMLElement>('.h').forEach((h) => {
-      const onHandleDown = (e: PointerEvent) => {
-        if (e.button !== 0) return;
-        const sxSign = h.classList.contains('tl') || h.classList.contains('bl') ? -1 : 1;
-        const sySign = h.classList.contains('tl') || h.classList.contains('tr') ? -1 : 1;
-        const x0 = x;
-        const y0 = y;
-        const w0 = shot.offsetWidth;
-        const ratio = shot.offsetHeight / w0;
-        track(e, (dx, dy) => {
-          const a = dx * sxSign;
-          const b = (dy * sySign) / ratio;
-          const w = Math.min(MAX_W, Math.max(MIN_W, w0 + (Math.abs(a) > Math.abs(b) ? a : b)));
-          mover.style.width = `${w}px`;
-          x = sxSign < 0 ? x0 + (w0 - w) : x0;
-          y = sySign < 0 ? y0 + (w0 - w) * ratio : y0;
-          place();
-        });
-      };
-      h.addEventListener('pointerdown', onHandleDown);
-      handleCleanups.push(() => h.removeEventListener('pointerdown', onHandleDown));
+    const ro = new ResizeObserver(([e]) => {
+      dims.textContent = `${Math.round(e.contentRect.width)} × ${Math.round(e.contentRect.height)}`;
     });
-
-    return () => {
-      ro?.disconnect();
-      mover.removeEventListener('pointerdown', onMoverDown);
-      handleCleanups.forEach((fn) => fn());
-    };
+    ro.observe(dims.parentElement);
+    return () => ro.disconnect();
   }, []);
 
   useEffect(() => {
@@ -294,14 +197,14 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
     <main className="about">
       <section className="about-hero">
         <div className="about-hero-inner">
-          <div ref={frameRef} className="sel-frame">
-            <div ref={moverRef} className="sel-move">
+          <div className="sel-frame">
+            <div className="sel-move">
               <div className="frame-bar">
                 <p className="frame-name" aria-hidden="true">
                   siddharth.png
                 </p>
               </div>
-              <div ref={shotRef} className="sel-box">
+              <div className="sel-box">
                 <img
                   src="https://framerusercontent.com/images/N9bWljoY20GYniOOS6CduLxHw10.png?scale-down-to=1024"
                   alt="Siddharth Pushkar"
@@ -316,13 +219,6 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 <span className="h br"></span>
                 <span ref={dimsRef} className="dims" data-dims aria-hidden="true"></span>
               </div>
-              <p className="about-note" aria-hidden="true">
-                drag or resize me!
-                <svg viewBox="0 0 60 64" overflow="visible">
-                  <path d="M52 6 C 46 28, 34 45, 14 54" />
-                  <path d="M23 44 L 14 54 L 27 56" />
-                </svg>
-              </p>
             </div>
           </div>
 
