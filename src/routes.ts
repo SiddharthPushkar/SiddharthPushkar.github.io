@@ -1,3 +1,6 @@
+// Hides every link to the Playground (the page still works by URL).
+export const SHOW_PLAYGROUND = false;
+
 export type RouteSlug =
   | ''
   | 'playground'

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { RouteSlug } from '../routes';
+import { RouteSlug, SHOW_PLAYGROUND } from '../routes';
 
 interface HeroCanvasProps {
   onNavigate: (slug: RouteSlug, hash?: string) => void;
@@ -756,31 +756,33 @@ export function HeroCanvas({ onNavigate }: HeroCanvasProps) {
           />
         </svg>
       </a>
-      <a
-        href="/playground"
-        className="playground-float appear arrow-link"
-        draggable={false}
-        aria-label="Open interactive Playground"
-        onClick={(e) => {
-          e.preventDefault();
-          onNavigate('playground');
-        }}
-      >
-        <span className="pg-float-art" aria-hidden="true">
-          <img
-            src="/src/assets/images/playground_studio_icon_1795514416842.jpg"
-            alt=""
-            width={40}
-            height={40}
-            draggable={false}
-            referrerPolicy="no-referrer"
-          />
-        </span>
-        <span className="pg-float-label">Playground</span>
-        <span className="pg-float-arrow" aria-hidden="true">
-          <i className="arr"></i>
-        </span>
-      </a>
+      {SHOW_PLAYGROUND && (
+        <a
+          href="/playground"
+          className="playground-float appear arrow-link"
+          draggable={false}
+          aria-label="Open interactive Playground"
+          onClick={(e) => {
+            e.preventDefault();
+            onNavigate('playground');
+          }}
+        >
+          <span className="pg-float-art" aria-hidden="true">
+            <img
+              src="/src/assets/images/playground_studio_icon_1795514416842.jpg"
+              alt=""
+              width={40}
+              height={40}
+              draggable={false}
+              referrerPolicy="no-referrer"
+            />
+          </span>
+          <span className="pg-float-label">Playground</span>
+          <span className="pg-float-arrow" aria-hidden="true">
+            <i className="arr"></i>
+          </span>
+        </a>
+      )}
       <svg className="svg-defs" aria-hidden="true" focusable="false">
         <defs>
           <StickerFilter id="avatar-sticker" radius={4.5} />

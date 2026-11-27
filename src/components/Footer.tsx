@@ -1,4 +1,4 @@
-import { RouteSlug } from '../routes';
+import { RouteSlug, SHOW_PLAYGROUND } from '../routes';
 
 interface FooterProps {
   onNavigate: (slug: RouteSlug, hash?: string) => void;
@@ -42,19 +42,21 @@ export function Footer({ onNavigate }: FooterProps) {
                 <span>Home</span>
               </a>
             </li>
-            <li>
-              <a
-                href="/playground"
-                className="roll"
-                data-text="Playground"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate('playground');
-                }}
-              >
-                <span>Playground</span>
-              </a>
-            </li>
+            {SHOW_PLAYGROUND && (
+              <li>
+                <a
+                  href="/playground"
+                  className="roll"
+                  data-text="Playground"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onNavigate('playground');
+                  }}
+                >
+                  <span>Playground</span>
+                </a>
+              </li>
+            )}
             <li>
               <a
                 href="/about"

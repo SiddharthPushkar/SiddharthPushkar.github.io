@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { RouteSlug } from '../routes';
+import { RouteSlug, SHOW_PLAYGROUND } from '../routes';
 
 interface AboutPageProps {
   onNavigate: (slug: RouteSlug, hash?: string) => void;
@@ -487,20 +487,22 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
               <i className="arr" aria-hidden="true"></i>
             </span>
           </a>
-          <a
-            href="/playground"
-            className="bridge-card arrow-link"
-            onClick={(e) => {
-              e.preventDefault();
-              onNavigate('playground');
-            }}
-          >
-            <small>Interactive experiments</small>
-            <span>
-              Open Playground
-              <i className="arr" aria-hidden="true"></i>
-            </span>
-          </a>
+          {SHOW_PLAYGROUND && (
+            <a
+              href="/playground"
+              className="bridge-card arrow-link"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate('playground');
+              }}
+            >
+              <small>Interactive experiments</small>
+              <span>
+                Open Playground
+                <i className="arr" aria-hidden="true"></i>
+              </span>
+            </a>
+          )}
         </section>
       </div>
     </main>
