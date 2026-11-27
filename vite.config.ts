@@ -29,6 +29,7 @@ export default defineConfig(() => {
       },
       // GitHub Pages has no SPA rewrites: give every route its own HTML file
       // (keeps the old /about.html-style URLs working) plus a 404 fallback.
+      // Each file gets its page's SEO head tags from seo/<route>.html.
       {
         name: 'static-route-pages',
         apply: 'build',
@@ -52,8 +53,15 @@ export default defineConfig(() => {
             'adhd-college-framework',
             '404',
           ];
-          for (const route of routes) {
-            fs.copyFileSync(indexHtml, path.resolve(distDir, `${route}.html`));
+          const template = fs.readFileSync(indexHtml, 'utf8');
+          const seoBlock = /<!-- seo:start[\s\S]*?<!-- seo:end -->/;
+          if (!seoBlock.test(template)) {
+            throw new Error('index.html is missing the seo:start/seo:end markers');
+          }
+          for (const route of ['index', ...routes]) {
+            const seo = fs.readFileSync(path.resolve(__dirname, 'seo', `${route}.html`), 'utf8').trim();
+            const html = template.replace(seoBlock, () => seo);
+            fs.writeFileSync(path.resolve(distDir, `${route}.html`), html);
           }
         },
       },
