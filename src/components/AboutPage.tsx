@@ -368,10 +368,6 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             <span>Designing fintech, healthcare &amp; consumer mobile products</span>
           </div>
           <div className="about-metric">
-            <strong className="tabular-nums">4 teams</strong>
-            <span>Shipped work at SaveIN, Betterway, Atmana &amp; Bobble AI</span>
-          </div>
-          <div className="about-metric">
             <strong>B.Des, DTU</strong>
             <span>Interaction Design, Delhi Technological University</span>
           </div>

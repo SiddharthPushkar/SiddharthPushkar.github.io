@@ -343,7 +343,7 @@
 .about-btn-ghost:hover>*,.about-btn-ghost:focus-visible>*{opacity:1}
 .about-btn-ghost:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .about-metrics{position:relative;max-width:1150px;margin:76px auto 0;padding-top:36px;border-top:1px solid rgba(30,30,30,.1);
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px}
 .about-metric{display:flex;flex-direction:column;gap:6px}
 .about-metric strong{font:700 28px/1.15 Manrope,sans-serif;letter-spacing:-.02em;color:var(--ink)}
 .about-metric span{font:400 15px/1.5 Inter,sans-serif;color:#525252;max-width:30ch}
