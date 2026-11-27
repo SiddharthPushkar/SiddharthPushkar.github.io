@@ -1,0 +1,8 @@
+{
+  "name": "Portfolio",
+  "description": "Portfolio of Siddharth Pushkar, an experience designer crafting digital products people enjoy. Case studies in healthcare fintech, budgeting and focus apps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
